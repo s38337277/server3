@@ -29,26 +29,25 @@ export default function Propuesta(req: Request, res: Response) {
             let { estado, filter } = req.query as Params
 
             if (filter) {
-                let Solicituds = await Filtro(userID, estado, filter, conn)
+                let Propuestas = await Filtro(userID, estado, filter, conn)
 
                 conn.release()
                 return res.status(200).json({
-                    Solicituds
+                    Propuestas
                 })
             }
 
 
             let areas = await group_solicitud(userID, estado, conn)
-            let Solicituds = await lista_solicitud(userID, estado, conn)
+            let Propuestas = await lista_solicitud(userID, estado, conn)
 
             conn.release()
             return res.status(200).json({
-                areas, Solicituds, tokenUser
+                areas, Propuestas, tokenUser
             })
 
         } catch (error) {
             conn.release()
-            console.log(error)
             return res.status(400).json(status400)
         }
 
@@ -60,8 +59,7 @@ export default function Propuesta(req: Request, res: Response) {
 const group_solicitud = async (userID: number, estado: string, conn: any): Promise<any> => {
 
     const query = "SELECT " +
-        "Problema.area as cargo, " +
-        "COUNT(*) as cantidad " +
+        "Problema.area as area " +
         "FROM Solicitud " +
         "inner join Problema on Solicitud.problema = Problema.id " +
         "WHERE " +
@@ -91,7 +89,7 @@ const group_solicitud = async (userID: number, estado: string, conn: any): Promi
 
 const Filtro = (userID: number, estado: string, filter: string, conn: any): Promise<any> => {
     const query: string = "SELECT " +
-        "Solicitud.id, " +
+        "Solicitud.id as propuesta, " +
         "Solicitud.precio, " +
         "Solicitud.descripcion, " +
         "Problema.area, " +
@@ -127,7 +125,7 @@ const Filtro = (userID: number, estado: string, filter: string, conn: any): Prom
 const lista_solicitud = async (id: number, estado: string, conn: any): Promise<any> => {
 
     const query = "SELECT " +
-        "Solicitud.id, " +
+        "Solicitud.id as propuesta, " +
         "Solicitud.precio, " +
         "Solicitud.descripcion, " +
         "Problema.area, " +

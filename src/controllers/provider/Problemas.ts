@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { status500, status400 } from "../../utils/statusCode";
 import connection from "../../connection/mysql";
-import { headerToken } from "../../utils/token";
+import { headerToken, setToken } from "../../utils/token";
 import { MysqlError } from "mysql";
 
 type Params = {
@@ -17,14 +17,13 @@ export default function Problemas(req: Request, res: Response) {
 
         try {
             let userId: number = await headerToken(req)
-            let { estado } = req.query as Params
-            
-            let ciudad:string = await resolve_Ciudad(userId,conn)
-            let problemas = await resolve_Problema(userId, ciudad, conn)
+            let key: string = await setToken(userId)
+
+            let problemas = await resolve_Problema(userId, conn)
 
             conn.release()
             return res.status(200).json({
-                problemas
+                problemas,key
             })
 
         } catch (error) {
@@ -37,7 +36,7 @@ export default function Problemas(req: Request, res: Response) {
 
 
 
-const resolve_Problema = (user: number, ciudad: string, conn: any): Promise<any> => {
+const resolve_Problema = (user: number, conn: any): Promise<any> => {
 
     const sqlQuery: string = `
     SELECT
@@ -63,14 +62,14 @@ const resolve_Problema = (user: number, ciudad: string, conn: any): Promise<any>
                 AreaProve.usuario = ?
         )
         AND Problema.estado IN ('espera', 'deposito')
-        AND SOUNDEX(AgendaProblema.ciudad) = SOUNDEX(?)
+      
         AND Problema.cliente != ?
     ORDER BY Problema.inicio DESC
 `;
 
-
+    //agregar despues  AND SOUNDEX(AgendaProblema.ciudad) = SOUNDEX(?)
     return new Promise((resolve, reject) => {
-        conn.query(sqlQuery, [user, ciudad,user], (err: MysqlError, result: any[]) => {
+        conn.query(sqlQuery, [user, user], (err: MysqlError, result: any[]) => {
             try {
                 if (err) {
                     console.log(err);

@@ -9,7 +9,7 @@ import { MysqlError } from "mysql";
 type typePropuesta = {
     problema: number
     costo: number
-    id: number
+    propuesta: number
     descripcion: string
     area: string
     estado: string
@@ -21,8 +21,7 @@ type typeProvedor = {
     usuario: string,
     provedor: number | string,
     informacion: string,
-    lactitud: number,
-    longitud: number
+
 }
 
 
@@ -42,7 +41,7 @@ export default function propuesta(req: Request, res: Response) {
                 return res.status(404).json(status404)
             } else {
 
-                let provider = await resolve_provedor(detalle.id, conn)
+                let provider = await resolve_provedor(detalle.propuesta, conn)
 
                 if (typeof provider !== "string") {
                     let ratings = await resolve_ratings(provider.provedor, conn)
@@ -51,7 +50,7 @@ export default function propuesta(req: Request, res: Response) {
                     conn.release()
 
                     provider.provedor = await setToken(provider.provedor)
-                    
+
                     return res.status(200).json({
                         detalle,
                         ratings,
@@ -60,13 +59,13 @@ export default function propuesta(req: Request, res: Response) {
                     })
                 }
 
-            
+
                 throw ""
             }
-            /*
-            
-                      
-                        */
+
+
+
+
 
         } catch (error) {
             console.log(error)
@@ -81,7 +80,7 @@ export default function propuesta(req: Request, res: Response) {
 const resolve_detalle = (id: number, conn: any): Promise<typePropuesta | string> => {
 
     const query = "SELECT " +
-        "Solicitud.id," +
+        "Solicitud.id as propuesta," +
         "Solicitud.problema, " +
         "Solicitud.precio, " +
         "Solicitud.descripcion, " +
@@ -118,7 +117,7 @@ const resolve_detalle = (id: number, conn: any): Promise<typePropuesta | string>
 
 const resolve_ratings = (provedor: number | string, conn: any): Promise<any> => {
 
-    let query = "SELECT ROUND(AVG(estrella),1) as ratings,Count(*) as usuarios from Calificacion WHERE usuario = ? and typeUSer = 'proveedor'"
+    let query = "SELECT ROUND(AVG(estrella),1) as estrella,Count(*) as usuarios from Calificacion WHERE usuario = ? and typeUSer = 'proveedor'"
 
     return new Promise((resolve, reject) => {
         conn.query(query, [provedor], (err: any, result: any) => {

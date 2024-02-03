@@ -16,9 +16,11 @@ class ValidationEntry {
     const errors = validationResult(req);
 
     /**
-     * console.log(req.body)
+     *     
+     console.log(req.body)
     console.log(errors)
-    */
+     */
+
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
@@ -132,7 +134,7 @@ class ApiApk extends ValidationEntry {
     body('descripcion').isString(),
     body('tipoUser').isIn(['cliente', 'proveedor'])
   ]
-  
+
   EntryCalificar = [
     body('usuario').notEmpty().isString(),
     body('typeUser').notEmpty().isIn(['proveedor', 'cliente']),
@@ -214,7 +216,7 @@ const validarGenero = (palabra: string): boolean => {
   // Verificar si la palabra es "hombre" o "mujer"
   if (genero === "hombre" || genero === "mujer") {
     console.log(true);
-    
+
     return true;
   } else {
     return false;

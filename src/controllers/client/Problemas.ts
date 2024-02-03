@@ -11,12 +11,12 @@ export default function Problema(req: Request, res: Response) {
             if (err)
                 return res.status(500).json(status500)
 
-            let id: number = await headerToken(req)
+            let idUser: number = await headerToken(req)
 
-            let problema = await resolveProblema(id, conn)
+            let Problemas = await resolveProblema(idUser, conn)
 
             conn.release()
-            return res.status(200).json(problema)
+            return res.status(200).json({Problemas})
 
         } catch (error) {
             conn.release()
@@ -27,7 +27,7 @@ export default function Problema(req: Request, res: Response) {
 
 const resolveProblema = (id: number, conn: any): Promise<any> => {
 
-    let query = "select id, descripcion, area,estado ,inicio from Problema WHERE cliente = ? ORDER BY inicio DESC limit 40"
+    let query = "select id as problema, descripcion, area,estado ,inicio from Problema WHERE cliente = ? ORDER BY inicio DESC limit 40"
 
     return new Promise((resolve, reject) => {
         conn.query(query, [id], (err: MysqlError, result: any[]) => {

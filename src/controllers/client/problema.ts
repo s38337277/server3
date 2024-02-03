@@ -42,7 +42,7 @@ export default function problema(req: Request, res: Response) {
 
 let resolve_problema = (problema: number, conn: any): Promise<any> => {
 
-    let query = "Select id,area,descripcion,estado,inicio from Problema WHERE id = ? LIMIT 1"
+    let query = "Select id as problema, area,descripcion,estado,inicio from Problema WHERE id = ? LIMIT 1"
 
     return new Promise((resolve, reject) => {
         conn.query(query, [problema], (err: MysqlError, result: any[]) => {

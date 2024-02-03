@@ -19,9 +19,7 @@ export default function SalasConversacionUser(req: Request, res: Response) {
             conn.release()
             return res.status(200).json({ Salas_Conversacion })
 
-        } catch (error) {
-            console.log(error);
-            
+        } catch (error) {            
             conn.release()
             return res.status(400).json(status400)
         }

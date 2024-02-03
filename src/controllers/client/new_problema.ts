@@ -58,7 +58,7 @@ export default function New_Problema(req: Request, res: Response) {
                 return res.status(200).json(problema)
 
             } catch (error) {
-
+                console.log(error)
                 conn.rollback(() => {
                     throw err;
                 });
