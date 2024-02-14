@@ -27,7 +27,7 @@ export default function Problema(req: Request, res: Response) {
 
 const resolveProblema = (id: number, conn: any): Promise<any> => {
 
-    let query = "select id as problema, descripcion, area,estado ,inicio from Problema WHERE cliente = ? ORDER BY inicio DESC limit 40"
+    let query = "select id as problema, descripcion, area,estado ,inicio from Problema WHERE cliente = ? ORDER BY inicio DESC limit 50"
 
     return new Promise((resolve, reject) => {
         conn.query(query, [id], (err: MysqlError, result: any[]) => {

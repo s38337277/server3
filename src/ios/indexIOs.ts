@@ -13,7 +13,7 @@ export default function IndexIos(io: Server, socket: Socket, onlineUsers: Map<st
             if (userID === "error")
                 throw userID
 
-            console.log(userID);
+           // console.log(userID);
 
             onlineUsers.set(userID, id)
 
@@ -39,7 +39,7 @@ export default function IndexIos(io: Server, socket: Socket, onlineUsers: Map<st
     socket.on("Message_Emisor", async (e) => {
         let { idUser, message, sala } = e
         try {
-
+                        
             let auxSocket:string = await searchIdSocket(idUser,onlineUsers)
 
             io.to(auxSocket).emit("Message_Receptor", ({ message, sala }))
@@ -48,6 +48,7 @@ export default function IndexIos(io: Server, socket: Socket, onlineUsers: Map<st
         }
 
     })
+
 
 
 }

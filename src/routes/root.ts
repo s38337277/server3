@@ -34,7 +34,7 @@ root.get('/perfil_user', AuthToken, PerfilUser)
 root.get('/is_exists', IsExistUser)
 root.get('/rankings', EntryRankin, EntrySecurity, Ranking)
 
-root.post('/new_notificacion',entryNotificacion,EntrySecurity, AuthToken, NewNotification)
+root.post('/create_notificacion',entryNotificacion,EntrySecurity, AuthToken, NewNotification)
 root.post('/sendMessage', AuthToken, SendMessage)
 root.post('/sala_conversacion',entryConversacion,EntrySecurity, AuthToken, Obtener_Sala_Message)
 root.post('/register_provider', entryRegisterProvider, EntrySecurity, AuthToken, RegisterProvider)

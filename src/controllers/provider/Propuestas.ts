@@ -28,16 +28,24 @@ export default function Propuestas(req: Request, res: Response) {
 
 
 const promise_Propuesta = (userId: number, conn: any): Promise<any> => {
-    let query: string = "Select " +
-        "Solicitud.id as propuesta, Problema.id as problema, Problema.area, Solicitud.descripcion, " +
-        "Usuarios.imgPerfil, Usuarios.usuario, Problema.area, Solicitud.estado, " +
-        "Solicitud.creaacion as publicado " +
-        "from Problema " +
-        "INNER JOIN Usuarios on Problema.cliente = Usuarios.id " +
-        "INNER JOIN Solicitud on Problema.id = Solicitud.problema " +
-        "WHERE Solicitud.provedor = ? " +
-        "ORDER BY Solicitud.creaacion DESC LIMIT 250"
+    let query: string = `
+    SELECT
+        Solicitud.id AS propuesta, Problema.id AS problema, Problema.area, Solicitud.descripcion, Usuarios.imgPerfil,
+        Usuarios.usuario, Problema.area, Solicitud.estado, Solicitud.creaacion AS publicado
+    FROM
+        Problema
+    INNER JOIN
+        Usuarios ON Problema.cliente = Usuarios.id
+    INNER JOIN
+        Solicitud ON Problema.id = Solicitud.problema
+    WHERE
+        Solicitud.provedor = ?
+    ORDER BY
+        Solicitud.creaacion DESC
+    LIMIT
+        250
 
+    `
     return new Promise((resolve, reject) => {
         conn.query(query, userId, (err: MysqlError, result: any[]) => {
             try {

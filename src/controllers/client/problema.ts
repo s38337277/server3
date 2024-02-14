@@ -62,7 +62,7 @@ let resolve_problema = (problema: number, conn: any): Promise<any> => {
 
 let resolve_Sources = (problema: number, conn: any): Promise<any> => {
 
-    let query = "Select url from ImageProblema WHERE problema = ? LIMIT 50"
+    let query = "Select url from ImageProblema WHERE problema = ?"
 
     return new Promise((resolve, reject) => {
         conn.query(query, [problema], (err: MysqlError, result: any[]) => {
@@ -80,7 +80,7 @@ let resolve_Sources = (problema: number, conn: any): Promise<any> => {
 
 let resolve_Agenda = (problema: number, conn: any): Promise<string> => {
 
-    let query = "Select lactitud,longitud,   calendario, hora from AgendaProblema WHERE problema = ? LIMIT 10"
+    let query = "Select lactitud,longitud,   calendario, hora from AgendaProblema WHERE problema = ? LIMIT 1"
 
     return new Promise((resolve, reject) => {
         conn.query(query, [problema], (err: any, result: any) => {

@@ -27,7 +27,7 @@ export default function SingIn(req: Request, res: Response) {
                 let { id, auxPassword, usuario, imgPerfil } = singIng
 
                 let compare: boolean = await bcrypts.compare(password, auxPassword)
-                console.log(compare);
+            //    console.log(compare);
                 
                 if (!compare) {
                     conn.release()

@@ -1,12 +1,5 @@
 import { validationResult, body, query, param } from "express-validator";
 import { Response, Request, NextFunction } from "express"
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
-
-
-const regexCharacter: string = "/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ0-9@¡!¿?,.\s]+$/"
-const regexCalendario: string = "/^\d{4}-\d{2}-\d{2}$/"
-const regexHora: string = "/^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/"
 
 class ValidationEntry {
 
@@ -15,12 +8,11 @@ class ValidationEntry {
   EntrySecurity(req: Request, res: Response, next: NextFunction) {
     const errors = validationResult(req);
 
-    /**
-     *     
-     console.log(req.body)
-    console.log(errors)
-     */
-
+    /*
+         console.log(req.body)
+        console.log(errors)
+         
+    */
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
@@ -214,7 +206,7 @@ const validarGenero = (palabra: string): boolean => {
   const genero: string = palabra.toLowerCase();
 
   // Verificar si la palabra es "hombre" o "mujer"
-  if (genero === "hombre" || genero === "mujer") {
+  if (genero === "hombre" || genero === "mujer" || genero === "otros") {
     console.log(true);
 
     return true;

@@ -56,7 +56,6 @@ const promise_SendMessage = (sala_id: number, usuario_emisor: number, mensaje: s
 
             try {
                 if (err) {
-                    console.log(err)
                     throw err.message
                 }
                 resolve("ok")

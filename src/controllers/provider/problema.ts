@@ -19,11 +19,11 @@ export default function problema(req: Request, res: Response) {
                 var { detalle, user } = problema
 
                 let sources = await promise_Source(id_problema, conn)
-                let agenda = await promise_Agenda(id_problema,conn)
+                let agenda = await promise_Agenda(id_problema, conn)
 
                 conn.release()
                 return res.status(200).json({
-                    detalle, user, sources,agenda
+                    detalle, user, sources, agenda
                 })
             }
 
@@ -40,11 +40,16 @@ export default function problema(req: Request, res: Response) {
 
 let promise_Problema = (problema: number, conn: any): Promise<{ detalle: any, user: any, status: number } | string> => {
 
-    let query = "Select " +
-        "Problema.id, Problema.area, Problema.descripcion, Problema.estado, Problema.inicio, " +
-        "Problema.cliente as idUser, Usuarios.usuario, Usuarios.imgPerfil " +
-        "from Problema INNER JOIN Usuarios on Problema.cliente = Usuarios.id " +
-        "WHERE Problema.id = ? LIMIT 1"
+    let query = `
+        Select
+        Problema.id as problema, Problema.area, Problema.descripcion, Problema.estado, Problema.inicio,Problema.cliente as idUser,
+        Usuarios.usuario, Usuarios.imgPerfil
+    from Problema
+        INNER JOIN Usuarios on Problema.cliente = Usuarios.id
+    WHERE
+        Problema.id = ?
+    LIMIT 1
+    `
 
     return new Promise((resolve, rejects) => {
         conn.query(query, problema, async (err: MysqlError, result: any[]) => {
@@ -56,7 +61,7 @@ let promise_Problema = (problema: number, conn: any): Promise<{ detalle: any, us
                     resolve("not found")
                 }
 
-                let { id, area, descripcion, estado, inicio, usuario, imgPerfil,
+                let { problema, area, descripcion, estado, inicio, usuario, imgPerfil,
                     idUser } = result[0]
 
                 let auxIdUser = await setToken(idUser)
@@ -67,7 +72,7 @@ let promise_Problema = (problema: number, conn: any): Promise<{ detalle: any, us
                         usuario, imgPerfil, idUser: auxIdUser
                     },
                     detalle: {
-                        id, area, descripcion, estado, inicio
+                        problema, area, descripcion, estado, inicio
                     },
                     status: 200
                 })
@@ -102,7 +107,7 @@ let promise_Source = (problema: number, conn: any): Promise<any> => {
 
 let promise_Agenda = (problema: number, conn: any): Promise<any> => {
 
-    let query = "Select calendario, hora, ciudad, lactitud, longitud from AgendaProblema WHERE problema = ? LIMIT 1"
+    let query = "Select calendario,TIME_FORMAT(hora, '%h:%i %p') AS hora, ciudad, lactitud, longitud from AgendaProblema WHERE problema = ? LIMIT 1"
 
     return new Promise((resolve, rejects) => {
         conn.query(query, problema, (err: MysqlError, result: any[]) => {

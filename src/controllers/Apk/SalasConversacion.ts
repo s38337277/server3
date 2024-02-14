@@ -19,7 +19,7 @@ export default function SalasConversacionUser(req: Request, res: Response) {
             conn.release()
             return res.status(200).json({ Salas_Conversacion })
 
-        } catch (error) {            
+        } catch (error) {
             conn.release()
             return res.status(400).json(status400)
         }
@@ -43,15 +43,34 @@ Filtra los resultados para incluir solo las salas en las que el usuario específ
  */
 const promise_Salas_Conversacion = (userID: number, typeUser: string, conn: any): Promise<any> => {
 
-    let query = "SELECT " +
-        "c.sala AS SalaID, u.usuario AS UsuarioCliente, p.usuario AS UsuarioProveedor, m.mensaje AS UltimoMensaje, " +
-        "u.imgPerfil as imgCliente, p.imgPerfil as imgProveedor, "+
-        "m.creates AS FechaUltimoMensaje, c.userCliente, c.userProveedor " +
-        "FROM Conversacion c " +
-        "JOIN Usuarios u ON c.userCliente = u.id " +
-        "JOIN Usuarios p ON c.userProveedor = p.id " +
-        "LEFT JOIN (  SELECT sala_id, mensaje, creates, ROW_NUMBER() OVER (PARTITION BY sala_id ORDER BY creates DESC) AS rn FROM Messages) " +
-        "m ON c.sala = m.sala_id AND m.rn = 1 WHERE   "
+    let query = `
+    SELECT
+        c.sala AS SalaID,
+        u.usuario AS UsuarioCliente,
+        p.usuario AS UsuarioProveedor,
+        m.mensaje AS UltimoMensaje,
+        u.imgPerfil AS imgCliente,
+        p.imgPerfil AS imgProveedor,
+        m.creates AS FechaUltimoMensaje,
+        c.userCliente,
+        c.userProveedor
+    FROM
+        Conversacion c
+    JOIN
+        Usuarios u ON c.userCliente = u.id
+    JOIN
+        Usuarios p ON c.userProveedor = p.id
+    LEFT JOIN (
+        SELECT
+            sala_id,
+            mensaje,
+            creates,
+            ROW_NUMBER() OVER (PARTITION BY sala_id ORDER BY creates DESC) AS rn
+        FROM
+            Messages
+    ) m ON c.sala = m.sala_id AND m.rn = 1
+    WHERE
+`
 
     let querAux: string = typeUser === "cliente" ? query.concat('c.userCliente = ? ') : query.concat('c.userProveedor = ? ')
 

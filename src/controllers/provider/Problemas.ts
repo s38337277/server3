@@ -23,7 +23,7 @@ export default function Problemas(req: Request, res: Response) {
 
             conn.release()
             return res.status(200).json({
-                problemas,key
+                problemas, key
             })
 
         } catch (error) {
@@ -40,18 +40,15 @@ const resolve_Problema = (user: number, conn: any): Promise<any> => {
 
     const sqlQuery: string = `
     SELECT
-        Problema.id,
+        Problema.id as Problema,
         Problema.area,
         Problema.descripcion,
         Problema.estado,
         Problema.inicio,
         Usuarios.imgPerfil,
         Usuarios.usuario,
-        Usuarios.usuario as nombreUsuario,
-        Problema.area as areaProblema,
-        Usuarios.usuario,
-        AgendaProblema.ciudad,
-        Usuarios.id as idUser
+        Problema.area as areaProblema
+
     FROM Problema
         INNER JOIN Usuarios ON Problema.cliente = Usuarios.id
         INNER JOIN AgendaProblema ON AgendaProblema.problema = Problema.id

@@ -34,16 +34,15 @@ export default function PerfilUser(req: Request, res: Response) {
 
 const promise_Usuario = (idUser: number, conn: any): Promise<any> => {
 
-    const query = "Select informacion,ciudad from Provedor WHERE usuario = ?"
+    const query = "Select informacion from Provedor WHERE usuario = ?"
 
     return new Promise((resolve, reject) => {
         conn.query(query, [idUser], (err: MysqlError, result: any[]) => {
             try {
 
                 if (err)
-                    throw err.message
-
-                let element = result[0]
+                    throw err.sqlMessage
+                let element = result[0].informacion
                 resolve(element)
             } catch (error) {
                 reject(error)
@@ -63,7 +62,7 @@ const promise_Sources = (idUser: number, conn: any): Promise<any> => {
             try {
 
                 if (err)
-                    throw err.message
+                    throw err.sqlMessage
 
                 resolve(result)
             } catch (error) {
@@ -83,7 +82,7 @@ const promise_Areas = (idUser: number, conn: any): Promise<any> => {
             try {
 
                 if (err)
-                    throw err.message
+                    throw err.sqlMessage
 
                 resolve(result)
             } catch (error) {

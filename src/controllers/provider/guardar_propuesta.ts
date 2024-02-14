@@ -1,9 +1,22 @@
 import { Request, Response } from "express";
 import { MysqlError } from "mysql"
 import connection from "../../connection/mysql";
-import { status400, status500, status404, status409,status200 } from "../../utils/statusCode";
+import { status400, status500, status404, status409, status200 } from "../../utils/statusCode";
 import { headerToken } from "../../utils/token";
-import { ModelNewPropuesta, Problema_isExist } from "../../model/interface/provider";
+
+
+type Bodys = {
+    problema: number,
+    descripcion: string,
+    precio: number
+}
+
+type Problema_isExist = {
+    id: number,
+    estado: string,
+    status: number
+}
+
 
 
 
@@ -14,11 +27,11 @@ export default function NewPropuesta(req: Request, res: Response) {
 
         try {
             const userId: number = await headerToken(req)
-            const { problema, descripcion, precio } = req.body as ModelNewPropuesta
+            const { problema, descripcion, precio } = req.body as Bodys
 
             let isExist = await promise_isExist(problema, conn)
 
-            
+
 
             if (typeof isExist === "object") {
                 if (isExist.status === 404) {
@@ -49,10 +62,10 @@ const promise_isExist = (problema: number, conn: any): Promise<Problema_isExist 
     let query = "Select id, estado from Problema WHERE id = ?"
 
     return new Promise((resolve, reject) => {
-        conn.query(query, problema, (err: any, result: any[]) => {
+        conn.query(query, problema, (err: MysqlError, result: any[]) => {
             try {
                 if (err)
-                    throw err.message
+                    throw err.sqlMessage
 
                 if (result.length === 0) {
                     resolve({
@@ -77,11 +90,11 @@ const promise_guardar = (problema: number, provedor: number, precio: number, des
     let query = 'Insert into Solicitud set ? '
 
     return new Promise((resolve, reject) => {
-        conn.query(query, { problema, provedor, precio, descripcion }, (err: any, result: any) => {
+        conn.query(query, { problema, provedor, precio, descripcion }, (err: MysqlError, result: any) => {
             try {
 
                 if (err)
-                    throw err.message
+                    throw err.sqlMessage
                 resolve("ok")
             } catch (error) {
                 console.log("de")

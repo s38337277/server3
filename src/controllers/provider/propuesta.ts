@@ -32,7 +32,7 @@ export default function Propuesta(req: Request, res: Response) {
 
 let promise_Propuesta = (problema: number, provedor: number, conn: any): Promise<null | object | string> => {
 
-    let query = " Select id as propuesta_ID ,precio,descripcion,creaacion,estado,problema as problema_ID from `Solicitud` WHERE provedor = ? and problema = ? Limit 1  "
+    let query = " Select id as propuesta_ID ,precio,descripcion,creaacion as creacion, estado,problema as problema_ID from `Solicitud` WHERE provedor = ? and problema = ? Limit 1  "
    
     return new Promise((resolve, reject) => {
         conn.query(query, [provedor, problema], (err: MysqlError, result: object[]) => {
@@ -42,7 +42,7 @@ let promise_Propuesta = (problema: number, provedor: number, conn: any): Promise
                 
                     throw err.sqlMessage
                 }
-
+          
                 if (result.length === 0)
                     resolve(null)
 

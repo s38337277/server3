@@ -14,17 +14,17 @@ export default function Tareas(req: Request, res: Response) {
         try {
 
             let userID = await headerToken(req)
-            let { status_problem } = req.query as { status_problem: string } /**Estado del Problema */
+            //    let { status_problem } = req.query as { status_problem: string } /**Estado del Problema */
 
-            if (status_problem) {
-                let tasks = await promise_FilterTask(userID, status_problem, conn)
-
-                conn.release()
-                return res.status(200).json({
-                    tareas: tasks
-                })
-            }
-
+            /*  if (status_problem) {
+                  let tasks = await promise_FilterTask(userID, status_problem, conn)
+  
+                  conn.release()
+                  return res.status(200).json({
+                      tareas: tasks
+                  })
+              }
+  */
 
             let tareas = await promise_Tareas(userID, conn)
             conn.release()
@@ -41,31 +41,26 @@ export default function Tareas(req: Request, res: Response) {
 
 /**Obtener toda la lista de tareas  */
 const promise_Tareas = (userId: number, conn: any): Promise<any> => {
-    let query = "SELECT " +
-        "Problema.id AS problema, Problema.descripcion, Usuarios.imgPerfil, " +
-        "Usuarios.usuario, Solicitud.estado, AgendaProblema.calendario, AgendaProblema.hora, " +
-        "Solicitud.updates " +
-        "FROM Solicitud " +
-        "INNER JOIN Problema ON Problema.id = Solicitud.problema " +
-        "INNER JOIN Usuarios ON Usuarios.id = Problema.cliente " +
-        "INNER JOIN AgendaProblema ON Problema.id = AgendaProblema.problema " +
-        "WHERE " +
-        "   Solicitud.provedor = 3234 AND Solicitud.estado != 'espera' " +
-        "ORDER BY " +
-        "   CASE " +
-        "       WHEN Solicitud.estado = 'proceso' THEN 1 " +
-        "       WHEN Solicitud.estado = 'resuelto' THEN 2 " +
-        "       WHEN Solicitud.estado = 'cancelado' THEN 3 " +
-        "       ELSE 4 " +
-        "   END, " +
-        "   AgendaProblema.calendario ASC, " +
-        "   AgendaProblema.hora ASC, " +
-        "   Solicitud.creaacion ASC;";
+    let query:string = `
+    SELECT Problema.id AS problema, Problema.descripcion, Usuarios.imgPerfil, Usuarios.usuario, Solicitud.estado, AgendaProblema.calendario, TIME_FORMAT(AgendaProblema.hora, '%H:%i %p') AS hora, Solicitud.updates
+    FROM
+        Solicitud
+        INNER JOIN Problema ON Problema.id = Solicitud.problema
+        INNER JOIN Usuarios ON Usuarios.id = Problema.cliente
+        INNER JOIN AgendaProblema ON Problema.id = AgendaProblema.problema
+    WHERE
+        Solicitud.provedor = ?
+        AND Solicitud.estado NOT IN('espera', 'deposito')
+    ORDER BY AgendaProblema.calendario DESC, AgendaProblema.hora DESC;
+    `
 
     return new Promise((resolve, reject) => {
         conn.query(query, userId, (err: MysqlError, result: object[]) => {
             try {
-                if (err) throw err.message
+                if (err) {
+                    console.log(err)
+                    throw err.message
+                }
                 resolve(result)
             } catch (error) {
                 console.log(error);
@@ -92,8 +87,8 @@ const promise_FilterTask = (userId: number, statusTask: string, conn: any): Prom
         "INNER JOIN Problema on Problema.id = Solicitud.problema " +
         "INNER JOIN Usuarios on Usuarios.id = Problema.cliente " +
         "INNER JOIN AgendaProblema on Problema.id = AgendaProblema.problema " +
-        "WHERE Solicitud.provedor = ? and Solicitud.estado = ?" +
-        "ORDER BY  Problema.estado DESC, Solicitud.updates ASC  "
+        "WHERE Solicitud.estado = ?" +
+        "ORDER BY  AgendaProbema.calendarios DESC, Solicitud.updates ASC  "
 
     return new Promise((resolve, reject) => {
         conn.query(query, [userId, statusTask], (err: MysqlError, result: object[]) => {

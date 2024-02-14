@@ -4,21 +4,36 @@ export default function Sockets_Provider(io: Server, socket: Socket, onlineUsers
 
     socket.on('Problema_Resuelto', async (e) => {
         try {
-            let { idUser, provedor } = e
-            
+            let { idUser, provedor, message } = e
+
             let auxSocket = await searchIdSocket(idUser, onlineUsers)
-            
-            io.to(auxSocket).emit("Problema_Finalizado", ({ message: `: El problema que asignaste a ${provedor} ha sido exitosamente resuelto` }))
+
+            let title: string = "Problema Resuelto"
+            io.to(auxSocket).emit("NotifyClient", ({
+                message, title
+            }))
 
         } catch (error) {
             console.log(error);
-            
+
             console.log("No se pudo guardar el socket ", socket.id);
 
         }
     })
 
+    socket.on('Nueva_Propuesta', async (e) => {
+        try {
+            let { idUser, provedor, message } = e
 
-  
+
+            let auxSocket = await searchIdSocket(idUser, onlineUsers)
+
+            let title: string = "Nueva Propuesta"
+            io.to(auxSocket).emit("NotifyClient", ({ message, title }))
+
+        } catch (error) {
+            console.log("No se pudo guardar el socket ", socket.id);
+        }
+    })
 
 }

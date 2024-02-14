@@ -4,7 +4,6 @@ import connection from "../../connection/mysql";
 import { status500, status400, status413 } from "../../utils/statusCode";
 import { headerToken } from "../../utils/token";
 import { MysqlError } from "mysql";
-import { register } from "module";
 
 
 type Bodys = {
