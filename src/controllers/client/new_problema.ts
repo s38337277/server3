@@ -118,7 +118,14 @@ const resolve_Sources = (problema: number, url: string, conn: any): Promise<stri
 
 const resolve_Problema = (cliente: number, descripcion: string, area: string, conn: any): Promise<number> => {
 
-    let query = "SELECT id from Problema WHERE cliente = ?  and descripcion = ? and area = ? ORDER BY inicio DESC LIMIT 1"
+    let query = `
+    SELECT 
+        id 
+    from Problema 
+    WHERE 
+        cliente = ?  and descripcion = ? and area = ? AND  inicio >= DATE_SUB(NOW(), INTERVAL 1 MINUTE)  
+    ORDER BY inicio DESC LIMIT 1
+    `
 
     return new Promise((resolve, reject) => {
         conn.query(query, [cliente, descripcion, area], (err: any, result: any) => {
@@ -128,6 +135,7 @@ const resolve_Problema = (cliente: number, descripcion: string, area: string, co
                     throw err.sqlMessage
 
                 let id = result[0].id
+                console.log(id)
                 resolve(id)
             } catch (error) {
                 reject(error)

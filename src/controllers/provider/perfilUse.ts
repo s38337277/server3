@@ -25,6 +25,7 @@ export default function PerfilUser(req: Request, res: Response) {
             })
         } catch (error) {
             conn.release()
+            console.log(error)
             return res.status(400).json(status400)
         }
     })
@@ -40,9 +41,12 @@ const promise_Usuario = (idUser: number, conn: any): Promise<any> => {
         conn.query(query, [idUser], (err: MysqlError, result: any[]) => {
             try {
 
+
                 if (err)
                     throw err.sqlMessage
                 let element = result[0].informacion
+
+
                 resolve(element)
             } catch (error) {
                 reject(error)

@@ -57,7 +57,7 @@ export default function Register_Provider(req: Request, res: Response) {
 const promise_Provider = (idUser: number, antecedentes: string, cedula: string, ciudad: string, conn: any): Promise<any> => {
 
     let query: string = "Insert into Provedor set ?"
-    let estado: string = "incripcion"
+    let estado: string = "inscripción"
 
     return new Promise((resolves, rejects) => {
         conn.query(query, { usuario: idUser, antecedentes, cedula, ciudad, estado }, (err: MysqlError, result: any) => {

@@ -44,5 +44,5 @@ root.post('/singin', entrySingIng, EntrySecurity, SingIn)
 
 
 //**Put */
-root.put('/edit_user', EntryEditUSer, EntrySecurity, AuthToken, EditUser)
+root.post('/edit_user', EntryEditUSer, EntrySecurity, AuthToken, EditUser)
 export default root

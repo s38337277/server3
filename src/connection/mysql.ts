@@ -1,7 +1,8 @@
 // Importar el módulo mysql2
 import mysql from "mysql2"
 
-// Crear el pool de conexiones a la base de datos MySQL
+
+// Crear el pool de conexiones a la base de datos MySQL Local
 let connection = mysql.createPool({
     database: "OzbraPr",         // Nombre de la base de datos
     user: "st3v33n",             // Nombre de usuario
@@ -11,6 +12,29 @@ let connection = mysql.createPool({
     connectionLimit: 20          // Límite máximo de conexiones en el pool
 })
 
+
+// Crear el pool de conexiones a la base de datos MySQL Remota
+/*
+let connection = mysql.createPool({
+    host: "viaduct.proxy.rlwy.net",
+    port: 53928,
+    user: "root",
+    password: "e31hEhg-Ab-2a43dGh62FHcAAEDa6EFe",
+    database: "railway",
+    connectionLimit: 20
+})
+*/
+/*
+connection.getConnection((err, conn) => {
+    if (err) {
+        console.log(err);
+        console.error("Error de conexión:", err.message);
+    } else {
+        console.log("Conexión exitosa a la base de datos MySQL en Amazon RDS.");
+        // Realizar consultas u otras operaciones aquí si la conexión es exitosa
+    }
+})
+*/
 // Evento 'acquire': Se emite cuando se adquiere una nueva conexión del pool
 connection.on('acquire', function (coon) {
     console.log('Conexión %d adquirida', coon.threadId);

@@ -1,4 +1,4 @@
--- Active: 1685411852797@@127.0.0.1@3306@OzbraPr
+-- Active: 1708581627892@@viaduct.proxy.rlwy.net@53928@railway
 
 CREATE Table
     if NOT exists Solicitud (
@@ -6,7 +6,7 @@ CREATE Table
         problema int NOT NULL,
         provedor FLOAT NOT NULL,
         estado BOOLEAN DEFAULT false,
-        costo FLOAT NOT NULL,
+        precio FLOAT NOT NULL,
         descripcion VARCHAR (550) Not null,
         creaacion DATETIME DEFAULT CURRENT_TIMESTAMP,
         updates DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -22,7 +22,8 @@ ALTER TABLE
     ) DEFAULT "espera";
 
 
-ALTER Table Solicitud ADD COLUMN visto BOOLEAN DEFAULT false;
+ALTER Table Solicitud ADD COLUMN deposito BOOLEAN DEFAULT false;
+
 
 DESCRIBE Solicitud;
 

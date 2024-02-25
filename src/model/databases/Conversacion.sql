@@ -1,4 +1,4 @@
--- Active: 1685411852797@@127.0.0.1@3306@OzbraPr
+-- Active: 1708581627892@@viaduct.proxy.rlwy.net@53928@railway
 
 create TABLE
     Conversacion(
@@ -14,6 +14,8 @@ ALTER TABLE Conversacion
 ADD
     Constraint Unik_Conver UNIQUE (userCliente, userProveedor);
 
+
+DESCRIBE Conversacion;
 /*
 Select * from `Conversacion`;
 

@@ -8,11 +8,11 @@ class ValidationEntry {
   EntrySecurity(req: Request, res: Response, next: NextFunction) {
     const errors = validationResult(req);
 
-    /*
+/*    
          console.log(req.body)
         console.log(errors)
-         
-    */
+  */       
+    
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
@@ -107,7 +107,8 @@ class ApiApk extends ValidationEntry {
   ]
 
   entryConversacion = [
-    body('userTypes').notEmpty().isIn(['proveedor', 'cliente'])
+    body('userTypes').notEmpty().isIn(['proveedor', 'cliente']),
+    body('usuario').isString()
   ]
 
   entryRegisterProvider = [

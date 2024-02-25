@@ -1,8 +1,8 @@
--- Active: 1685411852797@@127.0.0.1@3306@OzbraPr
+-- Active: 1708581627892@@viaduct.proxy.rlwy.net@53928@railway
 
 CREATE Table
     if NOT exists Notificacion (
-        ide INTEGER AUTO_INCREMENT UNIQUE,
+        ide INTEGER AUTO_INCREMENT PRIMARY KEY,
         usuario FLOAT,
         title VARCHAR (150),
         descripcion VARCHAR(350),

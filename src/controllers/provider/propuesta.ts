@@ -14,7 +14,7 @@ export default function Propuesta(req: Request, res: Response) {
 
             let userId: number = await headerToken(req)
             let problemId: number = Number(req.params.problemID)
-
+            console.log(problemId)
             let propuesta = await promise_Propuesta(problemId, userId, conn)
 
             conn.release()
