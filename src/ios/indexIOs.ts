@@ -49,6 +49,11 @@ export default function IndexIos(io: Server, socket: Socket, onlineUsers: Map<st
 
     })
 
+    socket.on("Log_App", async (e) => {
+        console.log(e)
+    })
+
+
 
 
 }
