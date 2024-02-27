@@ -3,7 +3,7 @@ import mysql from "mysql2"
 
 
 // Crear el pool de conexiones a la base de datos MySQL Local
-
+/*
 let connection = mysql.createPool({
     database: "OzbraPr",         // Nombre de la base de datos
     user: "st3v33n",             // Nombre de usuario
@@ -12,10 +12,10 @@ let connection = mysql.createPool({
     port: 3306,                  // Puerto de la base de datos
     connectionLimit: 20          // Límite máximo de conexiones en el pool
 })
-
+*/
 
 // Crear el pool de conexiones a la base de datos MySQL Remota
-/*
+
 let connection = mysql.createPool({
     host: "viaduct.proxy.rlwy.net",
     port: 53928,
@@ -24,7 +24,7 @@ let connection = mysql.createPool({
     database: "railway",
     connectionLimit: 20
 })
-*/
+
 /*
 connection.getConnection((err, conn) => {
     if (err) {
