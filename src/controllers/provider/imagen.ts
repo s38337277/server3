@@ -19,12 +19,16 @@ export default function Imagen(req: Request, res: Response) {
 
                 const userID: number = await headerToken(req)
 
-                const deleteQuey: string = await deleteImg(userID, conn)
+                const searchQuery: any = await searchImg(userID, conn)
 
                 for (let index = 0; index < imagen.length; index++) {
                     let url = imagen[index];
 
-                    let sqlInsert = await insertImg(url, userID, conn);
+                    if (isExists(searchQuery, url)) {
+                        let sqlInsert = await insertImg(url, userID, conn);
+
+                    }
+
                 }
 
                 conn.commit(function (errs) {
@@ -67,20 +71,22 @@ const insertImg = (url: string, provedor: number, conn: any): Promise<string> =>
 }
 
 
-const deleteImg = (provedor: number, conn: any): Promise<string> => {
+const searchImg = (provedor: number, conn: any): Promise<any> => {
 
-    let sqlQuery: string = "Delete from ImagenProv WHERE provedor = ?"
+    let sqlQuery: string = "Select url from ImagenProv WHERE provedor = ?"
 
     return new Promise((resolve, reject) => {
 
-        conn.query(sqlQuery, provedor, (err: MysqlError, conn: any) => {
+        conn.query(sqlQuery, provedor, (err: MysqlError, result: any[]) => {
             try {
 
                 if (err) {
                     throw err.sqlMessage
                 }
 
-                resolve("ok")
+                let element: any[] = result.map(e => e.url)
+
+                resolve(element)
 
             } catch (error) {
                 reject(error)
@@ -89,3 +95,6 @@ const deleteImg = (provedor: number, conn: any): Promise<string> => {
 
     })
 }
+
+const isExists = (array: any[], elemento: any): boolean => array.includes(elemento);
+

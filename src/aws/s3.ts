@@ -1,24 +1,108 @@
-// Importa el módulo de Cloudinary
-import * as cloudinary from 'cloudinary';
 
-// Configura Cloudinary con tu información de cuenta
-cloudinary.v2.config({
-  cloud_name: 'dd7gy1t9p',
-  api_key: '166757913783992',
-  api_secret: '9NZtDC0dCyOkqRXRKegpxSaZY6E'
-});
 
-// Define una función para subir una imagen a Cloudinary
-export const subirImagen = (rutaLocal: string) => {
-  // Usamos el método `uploader.upload` para subir la imagen
-  cloudinary.v2.uploader.upload(rutaLocal, (error, result) => {
-    if (error) {
-      console.error('Error al subir la imagen:', error);
-    } else {
-      console.log('Imagen subida exitosamente:', result);
-    }
-  });
+/**
+ * 
+ * @param fileName (nombre del archivo en S3)
+ * @param filePath (ruta local del archivo que se va a carga)
+ * @param bucketName 
+ * @returns 
+ */
+
+/*
+export const uploadFileToS3 = (fileName: string, filePath: string): Promise<AWS.S3.ManagedUpload.SendData> => {
+
+    return new Promise((resolve, reject) => {
+        fs.readFile(filePath, (err, fileContent) => {
+            if (err) {
+                reject(`Error al leer el archivo: ${err.message}`);
+                return;
+            }
+
+            const params: AWS.S3.PutObjectRequest = {
+                Bucket: bucketName,
+                Key: fileName,
+                Body: fileContent
+            };
+
+            s3.upload(params, (uploadErr, data) => {
+                if (uploadErr) {
+                    reject(`Error al cargar el archivo en S3: ${uploadErr.message}`);
+                    return;
+                }
+
+                resolve(data);
+            });
+        });
+    });
 }
 
-// Llama a la función para subir una imagen
-subirImagen('./imagenes/Appreciation.png');
+
+export const  deleteFileFromS3 = async (fileName: string): Promise<string> =>{
+    try {
+        const params: AWS.S3.DeleteObjectRequest = {
+            Bucket: bucketName,
+            Key: fileName
+        };
+
+        await s3.deleteObject(params).promise();
+
+        return (`Archivo '${fileName}' eliminado exitosamente de S3.`)
+    } catch (error) {
+
+        throw `Error al eliminar el archivo de S3: ${error}`;
+    }
+}
+
+*/
+
+
+import { S3 } from "aws-sdk"
+
+import { s3 } from "./Auth"
+
+const bucketName: string = 'ozbras-soruces' //(nombre del bucket de S3 al que se cargará el archivo)
+
+
+
+export const uploadFileToS3 = async (buffer: any, nombreArchivo: string, types: string): Promise<string> => {
+
+    const params: S3.PutObjectRequest = {
+        Bucket: bucketName,
+        Key: nombreArchivo,
+        Body: buffer,
+        ContentType: types
+    }
+
+    try {
+        const response = await s3.upload(params).promise();
+
+        let { Location } = response
+
+        return Location
+        // 'response.Location' contiene la URL pública de la imagen en S3
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+
+
+}
+
+
+
+export const deleteFileToS3 = async (nombreArchivo: string): Promise<string> => {
+    const params: S3.DeleteObjectRequest = {
+        Bucket: bucketName, // Nombre del bucket en S3
+        Key: nombreArchivo // Nombre del archivo que se eliminará de S3
+    };
+
+    try {
+        await s3.deleteObject(params).promise();
+        
+        return "ok";
+
+    } catch (error) {
+
+        throw error
+    }
+};

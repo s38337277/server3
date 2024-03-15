@@ -16,10 +16,10 @@ export default function delete_Problema(req: Request, res: Response) {
 
                 let { id } = req.body as { id: number }
 
-                const problema = await resolve_Problema(id, conn)
-                const sources = await resolve_Sources(id, conn)
-                const solicitud = await resolve_Propuestas(id, conn)
-                const agenfa = await resolve_Agenda(id, conn)
+                await resolve_Problema(id, conn)
+                await resolve_Sources(id, conn)
+                await resolve_Propuestas(id, conn)
+                await resolve_Agenda(id, conn)
 
                 conn.commit()
                 conn.release()

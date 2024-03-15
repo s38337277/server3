@@ -1,7 +1,7 @@
 -- Active: 1708581627892@@viaduct.proxy.rlwy.net@53928@railway
 
 CREATE TABLE IF NOT Exists Usuarios (
-    id FLOAT PRIMARY KEY AUTO_INCREMENT, usuario VARCHAR(50) UNIQUE, imgPerfil VARCHAR(150) DEFAULT "https://thumbs.dreamstime.com/b/icono-del-vector-perfil-de-la-cara-avatar-miembro-usuario-125994581.jpg", inicio DATETIME DEFAULT CURRENT_TIMESTAMP, updates DATETIME DEFAULT CURRENT_TIMESTAMP
+    id FLOAT PRIMARY KEY AUTO_INCREMENT, usuario VARCHAR(50) UNIQUE, imgPerfil VARCHAR(150), inicio DATETIME DEFAULT CURRENT_TIMESTAMP, updates DATETIME DEFAULT CURRENT_TIMESTAMP
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci AUTO_INCREMENT = 1000;
 
 ALTER TABLE Usuarios

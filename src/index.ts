@@ -8,6 +8,9 @@ import cors from "cors"
 import client from './routes/client';
 import provider from './routes/provider';
 import root from './routes/root';
+import AWS_Route from './middleware/Aws';
+
+
 /**IOS */
 import Sockets_Provider from './ios/provider';
 import Sockets_Clients from './ios/client';
@@ -16,8 +19,8 @@ import SocketIOS from './ios/indexIOs'
 
 
 const app = express();
-const port:number = 3030;
-const auxMorgan:string = "-IP :remote-addr  -METHOD :method -URL :url -STATUS :status -DATE :date  -TIME :response-time ms  -TAM :res[content-length]"
+const port: number = 3030;
+const auxMorgan: string = "-IP :remote-addr  -METHOD :method -URL :url -STATUS :status -DATE :date  -TIME :response-time ms  -TAM :res[content-length]"
 
 
 
@@ -32,6 +35,7 @@ app.use(cors({
 app.use('/client', client)
 app.use('/provider', provider)
 app.use('/', root)
+app.use('/aws', AWS_Route)
 
 
 const httpServer = createServer(app);

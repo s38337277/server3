@@ -10,7 +10,6 @@ type Bodys = {
     cliente: number                     /**Id del cliente */
     descripcion: string,
     area: string
-    sources: any[]
     lactitud: number
     longitud: number
     ciudad: string
@@ -30,7 +29,7 @@ export default function New_Problema(req: Request, res: Response) {
         conn.beginTransaction(async (err) => {
             try {
 
-                let { descripcion, area, calendario, hora, lactitud, longitud, ciudad, sources } = req.body as Bodys
+                let { descripcion, area, calendario, hora, lactitud, longitud, ciudad } = req.body as Bodys
 
                 let idUser: number = await headerToken(req) /**ID del usuario */
 
@@ -44,17 +43,10 @@ export default function New_Problema(req: Request, res: Response) {
 
                 let ubicacion = await resolve_Resolucion(lactitud, longitud, ciudad, problema, calendario, hora, conn)
 
-                if (sources.length > 0) {
-                    for (let index = 0; index < sources.length; index++) {
-                        const { url } = sources[index];
-                        let source = await resolve_Sources(problema, url, conn)
-
-                    }
-                }
 
                 conn.commit()
                 conn.release()
-                return res.status(200).json(problema)
+                return res.status(200).json({problema})
 
             } catch (error) {
                 console.log(error)
@@ -96,24 +88,6 @@ const resolve_newProblema = (cliente: number, descripcion: string, area: string,
     })
 }
 
-const resolve_Sources = (problema: number, url: string, conn: any): Promise<string> => {
-    const query = "INSERT INTO ImageProblema set ?"
-
-    return new Promise((resolve, reject) => {
-        conn.query(query, { problema, url }, (err: MysqlError, result: any[]) => {
-
-            try {
-                if (err) {
-                    throw err.sqlMessage
-                }
-                resolve("ok")
-            } catch (error) {
-                reject(error)
-            }
-
-        })
-    })
-}
 
 
 const resolve_Problema = (cliente: number, descripcion: string, area: string, conn: any): Promise<number> => {

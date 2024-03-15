@@ -11,6 +11,7 @@ import Aprobar_Propuesta from "../controllers/client/aprobar_solicitud";
 import Problema from "../controllers/client/Problemas"
 import problema from "../controllers/client/problema";
 import delete_Problema from "../controllers/client/delete_problema";
+import CreateSourceProblem from "../controllers/client/createSourceProblema";
 
 const client = Router()
 let { AceptarPropuesta, Detalle, NewProblema, PropuestaEntry,
@@ -25,6 +26,7 @@ client.get('/detalle_problema/:id', Detalle, EntrySecurity, AuthToken, problema)
 
 
 client.post('/publicar_problema', NewProblema, EntrySecurity, AuthToken, PublicarProblema)
+client.post('/create_sources_problema',CreateSourceProblem)
 
 /**actulizar */
 client.post('/aprobar_propuesta', AceptarPropuesta, EntrySecurity, AuthToken, Aprobar_Propuesta)
